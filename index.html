@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PGR Audio Guessing Game</title>
+    <link rel="stylesheet" href="./index.css">
+    <script src="./index.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>PGR Audio Guessing Game</h1>
+        <p class="subheading">
+            Which character's basic attack audio is being played?
+        </p>
+        <div class="action">
+            <button onclick="playAudio()">Play Audio</button>
+            <audio id="myAudio">
+                <source src="audio/Bastion BA.mp3" type="audio/mpeg">
+            </audio>
+        </div>        
+        <div class="button-container">
+            <button>Button 1</button>
+            <button>Button 2</button>
+            <button>Button 3</button>
+            <button>Button 4</button>
+        </div>
+        <div class="subheading" id="guessResult"></div>
+        <div class="action">
+            <button onclick="next()">Next</button>
+        </div>
+    </div>
+</body>
+</html>
