@@ -15,21 +15,24 @@
             Which character's basic attack audio is being played?
         </p>
         <div class="action">
+            <button id="start" onclick="startGame()">Start Game</button>
+        </div>   
+        <!-- <div class="action">
             <button onclick="playAudio()">Play Audio</button>
             <audio id="myAudio">
                 <source src="audio/Bastion BA.mp3" type="audio/mpeg">
             </audio>
-        </div>        
+        </div>         -->
         <div class="button-container">
-            <button>Button 1</button>
-            <button>Button 2</button>
-            <button>Button 3</button>
-            <button>Button 4</button>
+            <button id="choice0" class="hidden" onclick="checkCorrect()">Option 0</button>
+            <button id="choice1" class="hidden" onclick="checkCorrect()">Option 1</button>
+            <button id="choice2" class="hidden" onclick="checkCorrect()">Option 2</button>
+            <button id="choice3" class="hidden" onclick="checkCorrect()">Option 3</button>
         </div>
         <div class="subheading" id="guessResult"></div>
-        <div class="action">
+        <!-- <div class="action">
             <button onclick="next()">Next</button>
-        </div>
+        </div> -->
     </div>
 </body>
 </html>
