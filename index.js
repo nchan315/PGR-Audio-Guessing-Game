@@ -1,11 +1,11 @@
 const gameData = {
-    "Kamui: Bastion": "Bastion BA.mp3",
-    "Ayla: Brilliance": "Brilliance BA.mp3",
-    "Liv: Eclipse": "Eclipse BA.mp3",
-    "Lucia: Lotus": "Lotus BA.mp3",
-    "Watanabe: Nightblade": "Nightblade BA.mp3",
-    "Nanami: Storm": "Storm BA.mp3",
-    "Bianca: Zero": "Zero BA.mp3"
+    "Kamui: Bastion": "audio/Bastion BA.mp3",
+    "Ayla: Brilliance": "audio/Brilliance BA.mp3",
+    "Liv: Eclipse": "audio/Eclipse BA.mp3",
+    "Lucia: Lotus": "audio/Lotus BA.mp3",
+    "Watanabe: Nightblade": "audio/Nightblade BA.mp3",
+    "Nanami: Storm": "audio/Storm BA.mp3",
+    "Bianca: Zero": "audio/Zero BA.mp3"
 }
 const charKeys = Object.keys(gameData);
 const numOptions = charKeys.length;
@@ -19,6 +19,8 @@ const choice2 = document.getElementById("choice2");
 const choice3 = document.getElementById("choice3");
 const choicesArr = [choice0, choice1, choice2, choice3];
 const numChoices = choicesArr.length;
+
+const debug = document.getElementById("debug");
 
 function startGame() {
     let button = document.getElementById("start");
@@ -43,40 +45,41 @@ function nextQuestion() {
 
     optionsArray = [currentChar, option1, option2, option3];
     displayOptions(optionsArray);
-    // playAudio();
+    playAudio();
 }
 
 function displayOptions(optionsArray) {
     let optionsArr = scrambleArray(optionsArray);
     for (let i = 0; i < numChoices; i++) {
-        console.log(optionsArr);
-        choicesArr[i].textContent = optionsArr[i];
+        choicesArr[i].innerText = optionsArr[i];
     }
 }
 
 function playAudio() {
-    if (!currentAudio) {
-        reset();
-    }
-    var audio = document.getElementById("myAudio");
+    let audio = document.getElementById("audio");
+    let source = document.getElementById("audioSource");
+    source.src = currentAudio;
+    audio.load();
     audio.play();
 }
 
-function checkCorrect() {
-    // let input = document.getElementById("guess").value;
-    // const value = parseInt(input);
+function checkCorrect(input) {
+    let guess = choicesArr[input].innerText;
+    let result = document.getElementById("guessResult");
+    if (guess === currentChar) {
+        result.innerText = "Correct!";
+        let next = document.getElementById("next");
+        next.style.visibility = "visible";
+        next.style.display = "block";
+    } else {
+        result.innerText = "Incorrect!";
+    }
+}
 
-    // let message = document.getElementById("guessResult");
-    // if (isNaN(value)) {
-    //     message.textContent = "Not a Number";
-    // } else if (value < target) {
-    //     message.textContent = "Guess too low";
-    // } else if (value > target) {
-    //     message.textContent = "Guess too high";
-    // } else {
-    //     message.textContent = "You got it!";
-    //     reset();
-    // }
+function next() {
+    document.getElementById("next").style.visibility = "hidden";
+    document.getElementById("guessResult").innerText = "";
+    nextQuestion();
 }
 
 function getNRandomNumbers(n) {
@@ -93,4 +96,5 @@ function getNRandomNumbers(n) {
 function scrambleArray(array) {
     const i = Math.floor(Math.random() * array.length);
     [array[i], array[0]] = [array[0], array[i]];
+    return array;
 }

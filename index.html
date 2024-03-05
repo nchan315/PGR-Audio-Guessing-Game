@@ -17,22 +17,24 @@
         <div class="action">
             <button id="start" onclick="startGame()">Start Game</button>
         </div>   
-        <!-- <div class="action">
-            <button onclick="playAudio()">Play Audio</button>
-            <audio id="myAudio">
-                <source src="audio/Bastion BA.mp3" type="audio/mpeg">
+        <div class="action">
+            <audio id="audio">
+                <source id="audioSource" src="" type="audio/mpeg">
             </audio>
-        </div>         -->
+        </div>        
         <div class="button-container">
-            <button id="choice0" class="hidden" onclick="checkCorrect()">Option 0</button>
-            <button id="choice1" class="hidden" onclick="checkCorrect()">Option 1</button>
-            <button id="choice2" class="hidden" onclick="checkCorrect()">Option 2</button>
-            <button id="choice3" class="hidden" onclick="checkCorrect()">Option 3</button>
+            <button id="choice0" class="hidden" onclick="checkCorrect(0)">Option 0</button>
+            <button id="choice1" class="hidden" onclick="checkCorrect(1)">Option 1</button>
+            <button id="choice2" class="hidden" onclick="checkCorrect(2)">Option 2</button>
+            <button id="choice3" class="hidden" onclick="checkCorrect(3)">Option 3</button>
         </div>
-        <div class="subheading" id="guessResult"></div>
-        <!-- <div class="action">
-            <button onclick="next()">Next</button>
-        </div> -->
+        <div class="action">
+            <label id="guessResult"></label>
+        </div>
+        <div class="action">
+            <button id="next" class="hidden" onclick="next()">Next</button>
+        </div>
+        <label id="debug"></label>
     </div>
 </body>
 </html>
