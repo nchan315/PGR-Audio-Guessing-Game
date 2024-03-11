@@ -16,7 +16,10 @@
         </p>
         <div class="action">
             <button id="start" onclick="startGame()">Start Game</button>
-        </div>   
+        </div>
+        <div class="action">
+            <button id="startTimed" onclick="startGameTimed()">Start Timed Game</button>
+        </div>
         <div class="action">
             <audio id="audio">
                 <source id="audioSource" src="" type="audio/mpeg">
@@ -33,6 +36,12 @@
         </div>
         <div class="action">
             <button id="next" class="hidden" onclick="next()">Next</button>
+        </div>
+        <div class="action">
+            <label id="timer"></label>
+        </div>
+        <div class="action">
+            <label id="score"></label>
         </div>
         <label id="debug"></label>
     </div>

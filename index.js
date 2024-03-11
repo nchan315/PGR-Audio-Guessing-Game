@@ -1,25 +1,25 @@
 const gameData = {
-    "Chrome: Arclight": "audio/Arclight BA.mp3",
-    "Watanabe: Astral": "audio/Astral BA.mp3",
-    "Kamui: Bastion": "audio/Bastion BA.mp3",
-    "Karenina: Blast": "audio/Blast BA.mp3",
-    "Ayla: Brilliance": "audio/Brilliance BA.mp3",
-    "Alpha: Crimson Abyss": "audio/Crimson Abyss BA.mp3",
-    "Camu: Crocotta": "audio/Crocotta BA.mp3",
-    "Lucia: Dawn": "audio/Dawn BA.mp3",
-    "Liv: Eclipse": "audio/Eclipse BA.mp3",
-    "Karenina: Ember": "audio/Ember BA.mp3",
-    "Lee: Entropy": "audio/Entropy BA.mp3",
-    "Lucia: Lotus": "audio/Lotus BA.mp3",
-    "Liv: Luminance": "audio/Luminance BA.mp3",
-    "Liv: Lux": "audio/Lux BA.mp3",
-    "Watanabe: Nightblade": "audio/Nightblade BA.mp3",
-    "Lee: Palefire": "audio/Palefire BA.mp3",
-    "Lucia: Plume": "audio/Plume BA.mp3",
-    "Nanami: Pulse": "audio/Pulse BA.mp3",
-    "Rosetta: Rigor": "audio/Rigor BA.mp3",
-    "Vera: Rozen": "audio/Rozen BA.mp3",
-    "Sophia: Silverfang": "audio/Silverfang BA.mp3",
+    // "Chrome: Arclight": "audio/Arclight BA.mp3",
+    // "Watanabe: Astral": "audio/Astral BA.mp3",
+    // "Kamui: Bastion": "audio/Bastion BA.mp3",
+    // "Karenina: Blast": "audio/Blast BA.mp3",
+    // "Ayla: Brilliance": "audio/Brilliance BA.mp3",
+    // "Alpha: Crimson Abyss": "audio/Crimson Abyss BA.mp3",
+    // "Camu: Crocotta": "audio/Crocotta BA.mp3",
+    // "Lucia: Dawn": "audio/Dawn BA.mp3",
+    // "Liv: Eclipse": "audio/Eclipse BA.mp3",
+    // "Karenina: Ember": "audio/Ember BA.mp3",
+    // "Lee: Entropy": "audio/Entropy BA.mp3",
+    // "Lucia: Lotus": "audio/Lotus BA.mp3",
+    // "Liv: Luminance": "audio/Luminance BA.mp3",
+    // "Liv: Lux": "audio/Lux BA.mp3",
+    // "Watanabe: Nightblade": "audio/Nightblade BA.mp3",
+    // "Lee: Palefire": "audio/Palefire BA.mp3",
+    // "Lucia: Plume": "audio/Plume BA.mp3",
+    // "Nanami: Pulse": "audio/Pulse BA.mp3",
+    // "Rosetta: Rigor": "audio/Rigor BA.mp3",
+    // "Vera: Rozen": "audio/Rozen BA.mp3",
+    // "Sophia: Silverfang": "audio/Silverfang BA.mp3",
     "Nanami: Storm": "audio/Storm BA.mp3",
     "Kamui: Tenebrion": "audio/Tenebrion BA.mp3",
     "Bianca: Veritas": "audio/Veritas BA.mp3",
@@ -38,11 +38,25 @@ const choice3 = document.getElementById("choice3");
 const choicesArr = [choice0, choice1, choice2, choice3];
 const numChoices = choicesArr.length;
 
+let timed = false;
+let startTime = 0;
+let timerRunning = false;
+let penalty = 0;
+const timePenalty = 5000;
+
+// TODO: don't repeat questions
+// let seen = [];
+// TODO: add correct/total for both modes!
+// let correct = 0;
+let questions = 0;
+
 const debug = document.getElementById("debug");
 
 function startGame() {
     let button = document.getElementById("start");
     button.style.visibility = "hidden";
+    let button1 = document.getElementById("startTimed");
+    button1.style.visibility = "hidden";
 
     choice0.style.display = "block";
     choice1.style.display = "block";
@@ -50,6 +64,40 @@ function startGame() {
     choice3.style.display = "block";
 
     nextQuestion();
+}
+
+function startGameTimed() {
+    timed = true;
+    startTimer();
+    startGame();
+}
+
+function updateTimer() {
+    let timerDisplay = document.getElementById("timer");
+
+    let currentTime = new Date().getTime();
+    let elapsedTime = currentTime - startTime + penalty;
+
+    let min = Math.floor(elapsedTime / (1000 * 60));
+    let sec = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+    let ms = elapsedTime % 1000;
+
+    let timeOnDisplay = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
+    timerDisplay.textContent = timeOnDisplay
+}
+
+function startTimer() {
+    if (!timerRunning) {
+        startTime = new Date().getTime();
+        setInterval(updateTimer, 10);
+        timerRunning = true;
+    }
+}
+
+function stopTimer() {
+    if (timerRunning) {
+        timerRunning = false;
+    }
 }
 
 function nextQuestion() {
@@ -89,15 +137,47 @@ function checkCorrect(input) {
         let next = document.getElementById("next");
         next.style.visibility = "visible";
         next.style.display = "block";
+        if (questions + 1 == numOptions) {
+            next.innerText = "Done";
+        }
     } else {
         result.innerText = "Incorrect!";
+        if (timed) {
+            penalty += timePenalty;
+        }
     }
 }
 
 function next() {
+    questions++;
     document.getElementById("next").style.visibility = "hidden";
     document.getElementById("guessResult").innerText = "";
+
+    if (questions == numOptions) {
+        endGame();
+        return;
+    }
+    
     nextQuestion();
+}
+
+function endGame() {
+    if (timed) {
+        stopTimer();
+
+        // TODO: hide this when game done
+        document.getElementById("timer").style.visibility = "hidden";
+    }
+    for (let i = 0; i < numChoices; i++) {
+        choicesArr[i].style.visibility = "hidden";
+    }
+
+    let button = document.getElementById("start");
+    button.style.visibility = "visible";
+    let button1 = document.getElementById("startTimed");
+    button1.style.visibility = "visible";
+
+    // TODO: display score (for both game types)
 }
 
 function getNRandomNumbers(n) {
