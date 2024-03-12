@@ -44,10 +44,9 @@ let timerRunning = false;
 let penalty = 0;
 const timePenalty = 5000;
 
-// TODO: don't repeat questions
-// let seen = [];
-// TODO: add correct/total for both modes!
-// let correct = 0;
+let seen = [];
+let attempts = 0;
+let correct = 0;
 let questions = 0;
 
 const debug = document.getElementById("debug");
@@ -74,16 +73,7 @@ function startGameTimed() {
 
 function updateTimer() {
     let timerDisplay = document.getElementById("timer");
-
-    let currentTime = new Date().getTime();
-    let elapsedTime = currentTime - startTime + penalty;
-
-    let min = Math.floor(elapsedTime / (1000 * 60));
-    let sec = Math.floor((elapsedTime % (1000 * 60)) / 1000);
-    let ms = elapsedTime % 1000;
-
-    let timeOnDisplay = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
-    timerDisplay.textContent = timeOnDisplay
+    timerDisplay.textContent = getElapsedTime();
 }
 
 function startTimer() {
@@ -98,6 +88,18 @@ function stopTimer() {
     if (timerRunning) {
         timerRunning = false;
     }
+}
+
+function getElapsedTime() {
+    let currentTime = new Date().getTime();
+    let elapsedTime = currentTime - startTime + penalty;
+
+    let min = Math.floor(elapsedTime / (1000 * 60));
+    let sec = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+    let ms = elapsedTime % 1000;
+
+    let timeOnDisplay = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}.${ms.toString().padStart(3, '0')}`;
+    return timeOnDisplay;
 }
 
 function nextQuestion() {
@@ -137,10 +139,15 @@ function checkCorrect(input) {
         let next = document.getElementById("next");
         next.style.visibility = "visible";
         next.style.display = "block";
+        if (attempts == 0) {
+            correct++;
+        }
+        attempts = 0;
         if (questions + 1 == numOptions) {
             next.innerText = "Done";
         }
     } else {
+        attempts++;
         result.innerText = "Incorrect!";
         if (timed) {
             penalty += timePenalty;
@@ -165,7 +172,6 @@ function endGame() {
     if (timed) {
         stopTimer();
 
-        // TODO: hide this when game done
         document.getElementById("timer").style.visibility = "hidden";
     }
     for (let i = 0; i < numChoices; i++) {
@@ -174,14 +180,34 @@ function endGame() {
 
     let button = document.getElementById("start");
     button.style.visibility = "visible";
+    button.style.display = "block";
     let button1 = document.getElementById("startTimed");
     button1.style.visibility = "visible";
+    button1.style.display = "block";
 
-    // TODO: display score (for both game types)
+    displayScore();
+    // TODO: bug where not able to play again
+}
+
+function displayScore() {
+    let scoreLabel = document.getElementById("score");
+    scoreLabel.innerText = "Score: " + correct + "/" + questions;
+
+    if (timed) {
+        scoreLabel.innerText += "\nTime: " + getElapsedTime();
+    }
 }
 
 function getNRandomNumbers(n) {
     let numbers = [];
+    while (numbers.length == 0) {
+        let randomNum = Math.floor(Math.random() * numOptions);
+        if (!seen.includes(randomNum)) {
+            numbers.push(randomNum);
+            seen.push(randomNum);
+            continue;
+        }
+    }
     while (numbers.length < n) {
         let randomNum = Math.floor(Math.random() * numOptions);
         if (!numbers.includes(randomNum)) {
