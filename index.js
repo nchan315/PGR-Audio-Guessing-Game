@@ -52,11 +52,21 @@ let questions = 0;
 const debug = document.getElementById("debug");
 
 function startGame() {
+    seen = [];
+    correct = 0;
+    questions = 0;
+
     let button = document.getElementById("start");
     button.style.visibility = "hidden";
     let button1 = document.getElementById("startTimed");
     button1.style.visibility = "hidden";
+    let score = document.getElementById("score");
+    score.style.visibility = "hidden";
 
+    choice0.style.visibility = "visible";
+    choice1.style.visibility = "visible";
+    choice2.style.visibility = "visible";
+    choice3.style.visibility = "visible";
     choice0.style.display = "block";
     choice1.style.display = "block";
     choice2.style.display = "block";
@@ -186,12 +196,13 @@ function endGame() {
     button1.style.display = "block";
 
     displayScore();
-    // TODO: bug where not able to play again
 }
 
 function displayScore() {
     let scoreLabel = document.getElementById("score");
     scoreLabel.innerText = "Score: " + correct + "/" + questions;
+    scoreLabel.style.visibility = "visible";
+    scoreLabel.style.display = "block";
 
     if (timed) {
         scoreLabel.innerText += "\nTime: " + getElapsedTime();
